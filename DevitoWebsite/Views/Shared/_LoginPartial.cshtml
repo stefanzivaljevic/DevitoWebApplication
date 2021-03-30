@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<DevitoWebsite.Data.StoreUser> SignInManager
+@inject UserManager<DevitoWebsite.Data.StoreUser> UserManager
+
+    <ul class="navbar-nav">
+        @if (User.Identity.IsAuthenticated)
+        {
+            {
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-controller="Account" asp-action="Details" title="Manage">@UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Odjavite se</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="/Account/Details?wishlist"><i class="fas fa-heart"></i><p class="navBarLinkIcons"> Lista želja </p></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index"><i class="fas fa-shopping-cart"></i><p class="navBarLinkIcons"> Korpa</p></a>
+                </li>
+            }
+        }
+        else
+        {
+
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Registracija</a>
+            </li>
+            <li class="nav-item" id="loginNavItem">
+                <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Logovanje</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="/Account/Details?wishlist"><i class="fas fa-heart"></i><p class="navBarLinkIcons"> Lista želja </p></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index"><i class="fas fa-shopping-cart"></i><p class="navBarLinkIcons"> Korpa</p></a>
+            </li>
+        }
+    </ul>

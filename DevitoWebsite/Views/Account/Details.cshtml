@@ -1,0 +1,160 @@
+﻿@model DevitoWebsite.ViewModels.UserDetailsViewModel
+@{
+    ViewData["Title"] =" - "+ Model.FirstName+" "+Model.LastName;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="text-center">
+
+    <a class="navbar-brand" id="WelcomeLogo" asp-area="" asp-controller="Home" asp-action="Index">
+        <img src="~/lib/images/logo-large.png" class="img-fluid" />
+    </a>
+
+    <h2 class="display-4">Devito</h2>
+</div>
+
+<div class="row">
+    <div class="col-md-9 offset-1">
+        <h2>@Model.FirstName</h2>
+        <h4>@Model.LastName</h4>
+        <hr />
+
+    </div>
+</div>
+<div class="row mb-0">
+    <div class="col-md-3 offset-1 text-left pt-0">
+        <a class="btn btn-info btn-sm small UserDetailsEditButton" href="/Account/Edit" id="wishListScrollPoint">Izmeni korisničke podatke</a>
+    </div>
+    <div class="col-md-6 text-right mb-0">
+        <p>@Model.Address</p>
+        <p>@Model.PostalNumber, @Model.City</p>
+        <p>@Model.Country.Title</p>
+        <p>@Model.PhoneNumber</p>
+    </div>
+</div>
+<div class="row mt-0 pt-0">
+
+    <div class="col-md-9 offset-1 text-left">
+        <hr />
+    </div>
+</div>
+
+<div class="row mt-2">
+
+    <div class="col-md-6 offset-1 text-left">
+        <p>@Model.Email</p>
+        <p>********</p>
+    </div>
+    <div class="col-md-3 text-right pt-0" style="padding-top:3rem !important">
+        <a class="btn btn-info btn-sm small UserDetailsEditButton" href="/Account/EditLogin">Izmeni pristupne podatke</a>
+    </div>
+</div>
+<div class="row mt-0 pt-0">
+
+    <div class="col-md-9 offset-1 text-left">
+        <hr />
+    </div>
+</div>
+@if (Model.WishList != null)
+{
+    <div class="row mt-2" id="wishList">
+        <div class="w-100">
+            <div class="col-md-9 offset-1 mb-2">
+                <h4>Lista želja</h4>
+                <br/>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        @{
+
+            if (Model.WishList.WishListItems.Count <= 0 || Model.WishList.WishListItems == null)
+            {
+                <div class="col-md-4 offset-1 mb-5">
+                    <p>Vaša lista želja je prazna.</p>
+                </div>
+            }
+            else
+            {
+                foreach (var product in Model.WishList.WishListItems)
+                {
+                    <div class="col-md-4 offset-1 mb-5">
+                        <hr class="bg-dark mt-0 mb-0 border-primary" />
+                        <div class="row">
+
+                            <div class="col-md-2 mr-5 mt-5" id="ProductDetailsLeftColumn">
+                                <a href="/Products/Details/@product.Product.Id" data-abc="true">
+                                    <img src="@product.Product.Image" alt="@product.Product.Title" style="height:150px" />
+                                </a>
+                            </div>
+                            <div class="col-md-6 ml-5">
+                                <form>
+                                    @Html.AntiForgeryToken()
+                                    <a class="btn btn-outline-dark mt-0 btn-sm float-right mb-2" id="btnRemoveFromCart" onclick="RemoveFromWishList(this)" data-id="@product.Id"><i class="far fa-trash-alt"></i> <p class="d-inline ">Ukloni iz liste </p>  </a>
+                                </form>
+
+                                <a class="text-decoration-none" href="/Products/Details/@product.Product.Id"><h4 class="h4">@product.Product.Title</h4></a>
+                                <span class="small"><b>Broj artikla:</b>@product.Product.ItemNumber</span>
+                                <hr class="mb-0" />
+                                <span class="font-weight-bold">
+                                    Cena: @product.Product.Price RSD
+                                </span>
+                                <br />
+                            </div>
+                            <hr />
+                        </div>
+
+                    </div>
+                }
+            }
+
+        }
+    </div>
+}
+
+
+
+
+@section Scripts{
+    <script type="text/javascript">
+
+        var field = 'wishlist';
+        var url = window.location.href;
+        if (url.indexOf('?' + field) != -1)
+            $("html, body").animate({
+                scrollTop: $('#wishListScrollPoint').offset().top
+            }, 1200);
+        else
+            console.log("");
+
+
+        function RemoveFromWishList(item) {
+            var wishListItemId = $(item).attr("data-id");
+
+
+
+            var token = $('input[name="__RequestVerificationToken"]').val();
+            $.ajax({
+                type: 'DELETE',
+                url: '/WishList',
+                data: {
+                    __RequestVerificationToken: token,
+                    "wishListItemId": wishListItemId,
+                },
+                success: function (data) {
+
+                    location.reload();
+                },
+                error: function (request, status, error) {
+                    location.reload();
+
+                }
+
+            });
+
+
+        }
+
+    </script>
+}

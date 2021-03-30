@@ -1,0 +1,47 @@
+﻿@model DevitoWebsite.ViewModels.ContactMailViewModel
+@{
+    ViewData["Title"] = " - Kontakt";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <div class="text-center">
+
+        <a class="navbar-brand" id="WelcomeLogo" asp-area="" asp-controller="Home" asp-action="Index">
+            <img src="~/lib/images/logo-large.png" class="img-fluid" />
+        </a>
+
+        <h2 class="display-4">Devito</h2>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-8 col-md-offset-2 m-auto bg-light">
+            <div class="contact-form">
+                <h1>Kontakt</h1>
+                <p class="hint-text">Imate bilo kakvih pitanja? Ne ustručavajte se da nas direktno kontaktirate. Naš tim će vam odgovoriti i pomoći u najkraćem roku.</p>
+                <form asp-action="SendMail" asp-controller="Contact" method="post">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="inputFirstName">Ime</label>
+                                <input type="text" class="form-control" id="inputFirstName" asp-for="Name" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="inputLastName">Prezime</label>
+                                <input type="text" class="form-control" id="inputLastName" asp-for="LastName" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail">Email adresa</label>
+                        <input type="email" class="form-control" id="inputEmail" asp-for="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputMessage">Poruka</label>
+                        <textarea class="form-control" id="inputMessage" rows="5" asp-for="Message" required></textarea>
+                    </div>
+                    <input type="submit" class="btn btn-dark mb-2 ml-0" value="Pošalji poruku">
+                </form>
+            </div>
+        </div>
+    </div>

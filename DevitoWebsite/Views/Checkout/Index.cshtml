@@ -1,0 +1,177 @@
+﻿@model DevitoWebsite.ViewModels.CheckoutViewModel
+@{
+    ViewData["Title"] = " - Završetak kupovine";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var returnUrl = @Context.Request.Query["returnurl"];
+}
+
+<h2 class="mb-0">Završetak kupovine</h2>
+<br />
+<hr class="mt-0 mb-4" />
+<a class="btn btn-info btn-sm text-white" href="/Cart">Izmeni korpu</a>
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col-md-5 ml-md-5 ">
+            <h5 class="h5 mb-0">Podaci o dostavi</h5>
+            <hr class="bg-dark mt-0" />
+            <table class="w-100 text-center">
+                <tr><td class="text-left pl-5">Ime: </td><td>@Model.FirstName</td></tr>
+                <tr><td class="text-left pl-5">Prezime: </td><td>@Model.LastName</td></tr>
+                <tr><td class="text-left pl-5">Adresa: </td><td>@Model.Address</td></tr>
+                <tr><td class="text-left pl-5">Grad: </td><td>@Model.PostalNumber, @Model.City</td></tr>
+                <tr><td class="text-left pl-5">Država: </td><td>@Model.Country.SingleOrDefault(c => c.Id == Model.CountryId).Title</td></tr>
+                <tr><td class="text-left pl-5">Broj telefona: </td><td>@Model.PhoneNumber</td></tr>
+                <tr><td class="text-left pl-5"></td><td><a href="/Account/Edit?ReturnUrl=%2FCheckout" class="btn btn-dark btn-sm">Izmeni podatke</a></td></tr>
+            </table>
+        </div>
+        <div class="col-md-6">
+            @if (Model == null)
+            {
+                <h5 class="h5 mb-0"> Vaša korpa je prazna. </h5>
+            }
+            else
+            {
+                <h5 class="h5 mb-0"> @Model.Cart.CartItem.Count().ToString() artikla </h5>
+                <hr class="bg-dark mt-0 mb-0 border-primary" />
+
+                @foreach (var c in Model.Cart.CartItem)
+                {
+                    <div class="row collapsible">
+                        <div class="col-md-12">
+                            <a class="btn btn-sm btn-dark d-inline">+</a>
+                            <h4 class="h4 d-inline pl-2">@c.Product.Title</h4>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="row">
+                            <div class="col-md-5" id="ProductDetailsLeftColumn">
+                                <a href="#" data-abc="true">
+                                    <img src="@c.Product.Image" alt="@c.Product.Title" style="height:150px" />
+                                </a>
+                            </div>
+                            <div class="col-md-7">
+                                <input type="hidden" value="@c.Quantity" id="quantityValue_@c.Id" />
+                                <span class="small"><b>Broj artikla:</b>@c.Product.ItemNumber</span>
+                                <hr class="my-0" />
+                                <span class="font-weight-bold">
+                                    Cena: @c.Product.Price RSD
+                                    <a class="priceInfo"><i class="fas fa-info-circle"></i><span>Cena po komadu. </span></a>
+                                </span>
+                                <br />
+                                <div class="font-weight-bold mt-1 col-md-6 d-inline-block">
+                                    Veličina:
+                                    <div class="d-inline" id="MinusPlusRange">
+                                        <div class="number">
+                                            <input type="text" value="@c.Size" disabled />
+
+                                        </div>
+                                        <input type="hidden" asp-for="@c.Product.Id" value="@c.Product.Id" />
+                                    </div>
+                                </div>
+                                <div class="font-weight-bold col-md-5 d-inline-block">
+                                    Količina:
+                                    <div class="d-inline" id="MinusPlusRange">
+                                        <div class="number">
+                                            <input type="text" value="@c.Quantity" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="bg-dark mb-0" />
+                }
+            }
+        </div>
+    </div>
+    <form asp-action="ConfirmOrder" asp-controller="Checkout" method="post">
+        @Html.AntiForgeryToken()
+        <div class="row mt-5">
+            <div class="col col-md-5 ml-5">
+                <h5 class="h5 mb-0">Način plaćanja</h5>
+                <hr class="bg-dark mt-0" />
+                <div class="row">
+                    <div class="col-md-12">
+                        <select value="0" class="browser-default custom-select custom-select-sm mb-3" id="paymentOptions" asp-for="PaymentMethod">
+                            <option disabled selected>Odaberite način plaćanja</option>
+                            <option value="0">Pouzećem</option>
+                            <option value="1">Paypal </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col col-5 col-md-6">
+                <h5 class="h5 mb-0">Pregled kupovine</h5>
+                <hr class="bg-dark mt-0" />
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="font-weight-bold d-inline float-left">Artikli:</p>
+                        @if (Model == null)
+                        {
+                            <p class="font-weight-bold d-inline float-right"> 0 RSD </p>
+                        }
+                        else
+                        {
+                            <p class="font-weight-bold d-inline float-right"> @Model.Cart.TotalPrice RSD </p>
+                        }
+                    </div>
+                    <div class="col-md-12">
+                        <p class="font-weight-bold d-inline float-left">Dostava:</p>
+                        @if (Model == null)
+                        {
+                            <p class="font-weight-bold d-inline float-right">0 RSD</p>
+                        }
+                        else
+                        {
+                            <p class="font-weight-bold d-inline float-right">250 RSD</p>
+                        }
+                    </div>
+                    <div class="col-md-12">
+                        <hr />
+                        <p class="font-weight-bold d-inline float-left">Ukupno:</p>
+                        @if (Model == null)
+                        {
+                            <p class="font-weight-bold d-inline float-right">0 RSD</p>
+                        }
+                        else
+                        {
+                            <p class="font-weight-bold d-inline float-right">@(Model.Cart.TotalPrice+250) RSD</p>
+                        }
+                    </div>
+
+                    <input type="hidden" asp-for="FirstName" value="@Model.FirstName" />
+                    <input type="hidden" asp-for="LastName" value="@Model.LastName" />
+                    <input type="hidden" asp-for="Address" value="@Model.Address" />
+                    <input type="hidden" asp-for="PostalNumber" value="@Model.PostalNumber" />
+                    <input type="hidden" asp-for="City" value="@Model.City" />
+                    <input type="hidden" asp-for="PhoneNumber" value="@Model.PhoneNumber" />
+                    <input type="hidden" asp-for="CountryId" value="@Model.CountryId" />
+                    <input type="hidden" asp-for="Cart" value="@Model.Cart" />
+                    <div class="col-md-12">
+                        <input type="submit" value="Potvrdi kupovinu" class="btn btn-dark btn-sm col-md-12" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                //var content = $(this).parent().next(".content");
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,173 @@
+﻿@model DevitoWebsite.ViewModels.ProductDetailsViewModel
+@Vereyon.Web.FlashMessageHtmlHelper.RenderFlashMessages(Html)
+@{
+    ViewData["Title"] = " - "+ Model.Product.Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<div class="text-center">
+
+    <a class="navbar-brand" id="WelcomeLogo" asp-controller="Home" asp-action="Index">
+        <img src="~/lib/images/logo-large.png" class="img-fluid" />
+    </a>
+    <h2 class="display-4">Devito</h2>
+</div>
+
+<div class="row mt-5 position-relative">
+    <div class="col-md-7" id="ProductDetailsLeftColumn">
+        <a href="#" data-abc="true">
+            <img src="~/lib/images/duks.png" alt="@Model.Product.Title" />
+        </a>
+    </div>
+
+    <div class="col-md-5 single-rightside my-3">
+        <form method="post" asp-action="AddToCart" asp-controller="Cart">
+            <input type="hidden" asp-for="ProductId" value="@Model.Product.Id" />
+            <input type="hidden" asp-for="Product" value="@Model.Product" />
+            <input type="hidden" asp-for="Sizes" value="@Model.Sizes" />
+
+            <span asp-validation-for="Product" class="text-warning"></span>
+            <h2>@Model.Product.Title</h2>
+            <p>@Model.Product.Description</p>
+            <div class="mb-3">
+                <span class="small"><b>Broj artikla:</b>@Model.Product.ItemNumber</span>
+            </div>
+
+            <div class="mb-3">
+
+                <select style="width:100%;" value="0" class="browser-default custom-select custom-select-sm mb-3" asp-for="Size" id="selectSize">
+                    <option disabled selected>Odaberite veličinu</option>
+
+                    @{
+                        foreach (var s in Model.Sizes)
+                        {
+                            <option value="@s.SizeLetter">@s.SizeLetter</option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="Size" class="text-warning"></span>
+            </div>
+            <hr />
+            <div class="mt-0">
+                <span id="ProductPrice">
+                    @Model.Product.Price RSD
+                </span>
+                <sup>*</sup>
+                <br />
+                <span id="ProductPDV">* PDV uključen u cenu</span>
+            </div>
+            <div class="col-md-12">
+                <span id="DeliveryBadge" class="float-right">
+                    Dostava: 4-7 dana
+                </span>
+
+            </div>
+            <br />
+            <hr />
+            
+            <div class="mt-3 mb-3 col-5 d-inline-block float-left" id="MinusPlusRange">
+                <p>Količina:</p>
+            </div>
+            <div class="mt-3 mb-3 col-5 d-inline-block float-right" id="MinusPlusRange">
+                <div class="number d-inline-block">
+                    <span class="minus">-</span>
+                    <input asp-for="Quantity" type="text" id="selectQuantity" value="1" required />
+                    <span class="plus">+</span>
+                    <span asp-validation-for="Quantity" class="text-warning"></span>
+                </div>
+
+
+            </div>
+            <hr class="w-100 float-left"/>
+            <div class="row w-100">
+                <div class="col-6 d-inline-block">
+                    <a class=" btn btn-outline-dark btn-sm" onclick="AddToWishList(this)" data-id="@Model.Product.Id">Dodaj u listu želja <i class="fa fa-heart"></i> </a>
+                </div>
+                <div class="col-5 d-inline-block ml-2">
+                    <button type="submit" class="btn btn-dark btn-sm d-inline-block" id="btnAddToCart"><i class="fas fa-shopping-cart"></i> <p class="d-inline ">Dodaj u korpu </p>  </button>
+                </div>
+
+
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript">
+        //AddToWishList
+
+        function AddToWishList(item) {
+            
+            var itemId = $(item).attr("data-id");
+
+            var loginNavItem = document.getElementById("loginNavItem");
+
+            if (loginNavItem != null) {
+                window.location.replace("/Account/Login?ReturnUrl=%2FProducts%2FDetails%2F" + itemId);
+            }
+
+            var formData = new FormData();
+            formData.append("Id", itemId);
+
+            $.ajax({
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                data: formData,
+                url: '/WishList',
+                success: function (data) {
+                    AddToWishListSuccess();
+
+                },
+                error: function (request, status, error) {
+                    AddToWishListSameItemError();
+                }
+
+            });
+
+
+        }
+
+        function AddToWishListSuccess() {
+            $.ajax({
+                type: 'POST',
+                url: '/Messages/WishList/Success',
+                success: function () {
+                    window.scrollTo(0, 0);
+                    location.reload();
+
+
+                },
+                error: function (request, status, error) {
+                    window.scrollTo(0, 0);
+                    location.reload();
+                }
+
+            });
+        }
+
+
+        function AddToWishListSameItemError() {
+            $.ajax({
+                type: 'POST',
+                url: '/Messages/WishList/SameItemError',
+                success: function () {
+                    window.scrollTo(0, 0);
+                    location.reload();
+
+
+                },
+                error: function (request, status, error) {
+                    window.scrollTo(0, 0);
+                    location.reload();
+                }
+
+            });
+        }
+    </script>
+}

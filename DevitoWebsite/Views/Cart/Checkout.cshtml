@@ -1,0 +1,169 @@
+﻿@model DevitoWebsite.ViewModels.CheckoutViewModel
+@{
+    ViewData["Title"] = " - Završetak kupovine";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-0">Završetak kupovine</h2>
+<br />
+<hr class="mt-0 mb-4" />
+<div class="container mt-5">
+        <div class="row">
+
+            <div class="col-md-5 offset-md-1  mr-5">
+                <h5 class="h5 mb-0">Podaci o dostavi</h5>
+                <hr class="bg-dark mt-0" />
+
+                @using (Html.BeginForm("ConfirmOrder", "Cart"))
+                {
+                    <div class="form-group">
+                        <label asp-for="FirstName">Ime</label>
+                        <input asp-for="FirstName" type="text" class="form-control" />
+                        <span asp-validation-for="FirstName" class="text-warning"></span>
+
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="LastName">Prezime</label>
+                        <input asp-for="LastName" type="text" class="form-control" />
+                        <span asp-validation-for="LastName" class="text-warning"></span>
+
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Address">Adresa</label>
+                        <input asp-for="Address" type="text" class="form-control" />
+                        <span asp-validation-for="Address" class="text-warning"></span>
+
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PostalNumber">Poštanski broj</label>
+                        <input asp-for="PostalNumber" type="text" class="form-control" />
+                        <span asp-validation-for="PostalNumber" class="text-warning"></span>
+
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CountryId">Država</label>
+                        @Html.DropDownListFor(m => m.CountryId, new SelectList(Model.Country, "Id", "Title", Model.CountryId), "Odaberite državu...", htmlAttributes: new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PhoneNumber">Broj telefona</label>
+                        <input asp-for="PhoneNumber" type="text" class="form-control" />
+                        <span asp-validation-for="PhoneNumber" class="text-warning"></span>
+
+                    </div>
+
+
+
+                }
+
+            </div>
+            <div class="col-md-5 ml-1">
+                @if (Model == null)
+                {
+                    <h5 class="h5 mb-0"> Vaša korpa je prazna. </h5>
+                }
+                else
+                {
+                    <h5 class="h5 mb-0 "> @Model.Cart.CartItem.Count().ToString() artikla </h5>
+
+
+
+
+                    <hr class="bg-dark mt-0 mb-0 border-primary" />
+
+
+
+                    @foreach (var c in Model.Cart.CartItem)
+                    {
+
+                        <div class="row">
+                            <div class="col-md-2 mr-5 mt-5" id="ProductDetailsLeftColumn">
+                                <a href="#" data-abc="true">
+                                    <img src="@c.Product.Image" alt="@c.Product.Title" style="height:150px" />
+                                </a>
+                            </div>
+                            <div class="col-md-7 ml-5">
+                                <input type="hidden" value="@c.Quantity" id="quantityValue_@c.Id" />
+                                <a class="btn btn-outline-dark mt-0 btn-sm float-right mb-2" id="btnRemoveFromCart" onclick="RemoveFromCart(this)" data-id="@c.Id"><i class="far fa-trash-alt"></i> <p class="d-inline ">Ukloni iz korpe </p>  </a>
+                                <h4 class="h4">@c.Product.Title</h4>
+                                <span class="small"><b>Broj artikla:</b>@c.Product.ItemNumber</span>
+                                <hr class="mb-0" />
+                                <span class="font-weight-bold">
+                                    Cena: @c.Product.Price RSD
+                                </span>
+                                <br />
+                                <div class="font-weight-bold mt-1">
+                                    Veličina:
+
+                                    <div class="d-inline">
+
+                                        <select value="0" class="browser-default custom-select custom-select-sm mb-3" asp-for="@c.Size">
+                                            <option value="@c.Size">@c.Size</option>
+                                            @{
+                                                foreach (var s in Model.Cart.CartItem)
+                                                {
+                                                    foreach (var size in s.Product.Sizes)
+                                                    {
+                                                        <option value="@size.SizeLetter">@size.SizeLetter</option>
+                                                    }
+
+
+
+
+                                                }
+                                            }
+                                        </select>
+                                        <input type="hidden" asp-for="@c.Product.Id" value="@c.Product.Id" />
+                                    </div>
+                                </div>
+                                <div class="font-weight-bold">
+                                    Količina:
+                                    <div class="d-inline" id="MinusPlusRange">
+                                        <div class="number">
+                                            <span class="minus">-</span>
+                                            <input type="text" asp-for="@c.Quantity" value="@c.Quantity" id="itemQuantity" />
+                                            <span class="plus">+</span>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                            <hr />
+                        </div>
+                        <hr class="bg-dark mb-0" />
+
+                    }
+                }
+            </div>
+
+        </div>
+    
+
+    <div class="col col-md-4">
+        <h5 class="h5 mb-0">Pregled kupovine</h5>
+        <hr class="bg-dark mt-0" />
+        <div class="row">
+            <div class="col-md-12">
+                <p class="font-weight-bold d-inline float-left">Artikli:</p>
+                <p class="font-weight-bold d-inline float-right">5500 RSD</p>
+            </div>
+            <div class="col-md-12">
+                <p class="font-weight-bold d-inline float-left">Dostava:</p>
+                <p class="font-weight-bold d-inline float-right">250 RSD</p>
+            </div>
+            <div class="col-md-12">
+                <hr />
+                <p class="font-weight-bold d-inline float-left">Ukupno:</p>
+                <p class="font-weight-bold d-inline float-right">5750 RSD</p>
+            </div>
+            <div class="col-md-12">
+                <input type="submit" value="Nastavi na plaćanje" class="btn btn-dark btn-sm col-md-12" />
+            </div>
+        </div>
+    </div>
+
+
+</div>

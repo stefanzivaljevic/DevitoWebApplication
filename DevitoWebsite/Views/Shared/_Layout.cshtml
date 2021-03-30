@@ -1,0 +1,192 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<DevitoWebsite.Data.StoreUser> SignInManager
+@inject UserManager<DevitoWebsite.Data.StoreUser> UserManager
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Devito Anonymo @ViewData["Title"]</title>
+    <link href="~/lib/fontawesome-free-5.13.0-web/css/all.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/lux-bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="shortcut icon" href="~/lib/images/logo.png" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3" id="navbar-fixed">
+            <div class="container">
+
+                <a class="navbar-brand navbar-logo" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/lib/images/logo.png" class="img-fluid" />
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <partial name="_LoginPartial" />
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+
+                            <a class="nav-link text-dark" href="https://www.instagram.com/devitoanonymo/" target="_blank"><i class="fab fa-instagram"></i> devitoanonymo</a>
+                        </li>
+                        <li class="nav-item">
+
+                            <a class="nav-link text-dark" href="https://www.youtube.com/channel/UCeBh3GXjo8tmjeQt_kHNocw" target="_blank"><i class="fab fa-youtube"></i> devito anonymo</a>
+                        </li>
+
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container" id="content">
+        <main role="main" id="main">
+            @Vereyon.Web.FlashMessageHtmlHelper.RenderFlashMessages(Html)
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="page-footer font-small indigo">
+
+        <!-- Footer Links -->
+        <div class="container">
+
+            <!-- Grid row-->
+            <div class="row text-center d-flex justify-content-center pt-5 mb-3">
+
+                <!-- Grid column -->
+                <div class="col-md-3 mb-3">
+                    <h6 class="text-uppercase font-weight-bold">
+                        <a asp-controller="Home" asp-action="Index">Početna</a>
+                    </h6>
+                </div>
+                <!-- Grid column -->
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="col-md-3 mb-3">
+                        <h6 class="text-uppercase font-weight-bold">
+
+                            <a class="font-weight-bold" asp-controller="Account" asp-action="Details" title="Manage">@UserManager.GetUserAsync(User).Result.FirstName @UserManager.GetUserAsync(User).Result.LastName</a>
+                        </h6>
+                    </div>
+                    <!-- Grid column -->
+                    <!-- Grid column -->
+                    <div class="col-md-3 mb-3">
+                        <h6 class="text-uppercase font-weight-bold">
+                            <a class="font-weight-bold"  href="/Account/Details?wishlist">Lista želja</a>
+                        </h6>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-3 mb-3">
+                        <h6 class="text-uppercase font-weight-bold">
+
+                            <a asp-controller="Account" asp-action="Login">Logovanje</a>
+                        </h6>
+                    </div>
+                    <!-- Grid column -->
+                    <!-- Grid column -->
+                    <div class="col-md-3 mb-3">
+                        <h6 class="text-uppercase font-weight-bold">
+                            <a asp-controller="Account" asp-action="Register">Registracija</a>
+                        </h6>
+                    </div>
+                }
+
+
+            </div>
+
+            <!-- Grid row-->
+            <hr class="rgba-white-light" style="margin: 0 15%;">
+
+
+            <!-- Grid row-->
+            <hr class="clearfix d-md-none rgba-white-light" style="margin: 10% 15% 0%;">
+
+            <div class="row d-flex text-center justify-content-center mb-md-0 mb-1">
+                <a class="navbar-brand" id="WelcomeLogo" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/lib/images/logo-inverted.png" class="img-fluid" style="height:5rem" />
+                    <h6 class="text-white mt-2">Devito Anonymo</h6>
+                </a>
+
+            </div>
+
+            <!-- Grid row-->
+            <hr class="rgba-white-light" style="margin: 0 15%;">
+
+
+            <!-- Grid row-->
+            <hr class="clearfix d-md-none rgba-white-light" style="margin: 0% 15% 1%;">
+
+            <div class="row d-flex text-center justify-content-center mb-md-0 mb-1">
+
+                <!-- Grid column -->
+                <div class="col-md-10 col-12 mt-0 d-flex text-center justify-content-center">
+                    <div class="col-md-5 mb-0">
+                        <h6 class="text-uppercase font-weight-bold footersocialmedialink">
+                            <a class="nav-link text-white" href="https://www.instagram.com/devitoanonymo/" target="_blank"><i class="fab fa-instagram footersocialmedialinkSvg"></i> devito anonymo</a>
+                        </h6>
+                    </div>
+                    <!-- Grid column -->
+                    <!-- Grid column -->
+                    <div class="col-md-5 mb-0">
+                        <h6 class="text-uppercase font-weight-bold footersocialmedialink">
+                            <a class="nav-link text-white" href="https://www.youtube.com/channel/UCeBh3GXjo8tmjeQt_kHNocw" target="_blank"><i class="fab fa-youtube footersocialmedialinkSvg"></i> devito anonymo</a>
+                        </h6>
+                    </div>
+                </div>
+                <!-- Grid column -->
+
+            </div>
+            <!-- Grid row-->
+            <div class="row d-flex text-center justify-content-center mb-md-0 mb-0">
+
+                <!-- Grid column -->
+                <div class="col-md-8 col-12 mt-5 d-flex text-center justify-content-center">
+                    <div class="col-md-4 mb-0">
+                        <h6 class="text-uppercase font-weight-bold" style="font-size:60%">
+                            <a href="/UsloviKoriscenja">Uslovi korišćenja</a>
+                        </h6>
+                    </div>
+                    <!-- Grid column --> 
+                    <div class="col-md-4 mb-0">
+                        <h6 class="text-uppercase font-weight-bold" style="font-size:60%">
+                            <a href="/Kontakt">Kontakt</a>
+                        </h6>
+                    </div>
+                    <!-- Grid column -->
+                    <div class="col-md-4 mb-0">
+                        <h6 class="text-uppercase font-weight-bold" style="font-size:60%">
+                            <a href="/Privatnost">Politika privatnosti</a>
+                        </h6>
+                    </div>
+
+                </div>
+                <!-- Grid column -->
+
+            </div>
+        </div>
+        <!-- Footer Links -->
+        <!-- Copyright -->
+        <div class="footer-copyright text-center pt-3 pb-0">
+            <small><a href="/Sitemap" target="_blank">Sitemap</a> &nabla; Developed By <a target="_blank" href="https://www.linkedin.com/in/stefan-zivaljevic-7145bb173">StefanoDAngola</a></small>
+        </div>
+        <!-- Copyright -->
+
+    </footer>
+    <!-- Footer -->
+
+    <button onclick="topFunction()" id="scrollButton"><i class="fa fa-chevron-up"></i></button>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/fontawesome-free-5.13.0-web/js/all.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,58 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>aspnet-DevitoWebsite-E99D6EBB-7FC1-4CC0-AC88-362558EB5614</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20200511113720_refresh.cs" />
+    <Compile Remove="Data\Migrations\20200511113720_refresh.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200512112341_EditStoreUser.cs" />
+    <Compile Remove="Data\Migrations\20200512112341_EditStoreUser.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200516084849_newModel.cs" />
+    <Compile Remove="Data\Migrations\20200516084849_newModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200516085429_NewModel2.cs" />
+    <Compile Remove="Data\Migrations\20200516085429_NewModel2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200516191446_asdasd.cs" />
+    <Compile Remove="Data\Migrations\20200516191446_asdasd.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200516200407_EditCartItemTable.cs" />
+    <Compile Remove="Data\Migrations\20200516200407_EditCartItemTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200517175402_AddCartItemIdToProductsTable.cs" />
+    <Compile Remove="Data\Migrations\20200517175402_AddCartItemIdToProductsTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200525094740_CheckoutEdit.cs" />
+    <Compile Remove="Data\Migrations\20200525094740_CheckoutEdit.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200525095204_ChangePhoneNumberToString.cs" />
+    <Compile Remove="Data\Migrations\20200525095204_ChangePhoneNumberToString.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200530075741_AddWishListTable.cs" />
+    <Compile Remove="Data\Migrations\20200530075741_AddWishListTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200530075828_AddWishListTable.cs" />
+    <Compile Remove="Data\Migrations\20200530075828_AddWishListTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200530080346_AddWishListTable.cs" />
+    <Compile Remove="Data\Migrations\20200530080346_AddWishListTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200530081825_AddWishListColumnToStoreUserTable.cs" />
+    <Compile Remove="Data\Migrations\20200530081825_AddWishListColumnToStoreUserTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200530093609_something.cs" />
+    <Compile Remove="Data\Migrations\20200530093609_something.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="automapper" Version="9.0.0" />
+    <PackageReference Include="MailKit" Version="2.7.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.3" />
+    <PackageReference Include="MimeKit" Version="2.8.0" />
+    <PackageReference Include="PayPal" Version="1.9.1" />
+    <PackageReference Include="PayPalCoreSDK" Version="1.7.1" />
+    <PackageReference Include="Vereyon.Web.FlashMessage" Version="1.2.0" />
+  </ItemGroup>
+
+</Project>

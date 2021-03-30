@@ -1,0 +1,316 @@
+﻿@model DevitoWebsite.ViewModels.CartViewModel
+@{
+    ViewData["Title"] = " - Korpa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2 class="mb-0">Vaša korpa</h2>
+<p>Dostupne opcije plaćanja su putem Paypal-a i pouzećem. </p>
+<hr class="mt-0" />
+<br />
+
+
+<div class="container">
+    <form method="get" asp-action="Index" asp-controller="Checkout">
+        @Html.AntiForgeryToken()
+        <div class="row">
+
+            <div class="col-md-5 offset-md-1  mr-4  mb-5">
+                @if (Model == null)
+                {
+                    <h5 class="h5 mb-0"> Vaša korpa je prazna. </h5>
+                    <hr class="bg-dark mt-0 mb-0 border-primary" />
+                }
+                else
+                {
+                    if (Model.Cart.CartItem.Count() <= 0)
+                    {
+                        <h5 class="h5 mb-0 "> Vaša korpa je prazna.  </h5>
+                    }
+                    else
+                    {
+                        <h5 class="h5 mb-0 "> @Model.Cart.CartItem.Count().ToString() artikla </h5>
+                    }
+
+                    <hr class="bg-dark mt-0 mb-0 border-primary" />
+
+
+                    @for (int i = 0; i < Model.Cart.CartItem.Count(); i++)
+                    {
+
+                        <input type="hidden" value=@i id="cartItemCounter_@Model.Cart.CartItem[i].Id" />
+                    }
+
+                    @foreach (var c in Model.Cart.CartItem)
+                    {
+                        <div class="row">
+                            <div class="col-md-2 mr-5 mt-5" id="ProductDetailsLeftColumn">
+                                <a href="/Products/Details/@c.Product.Id" data-abc="true">
+                                    <img src="@c.Product.Image" alt="@c.Product.Title" style="height:150px" />
+                                </a>
+                            </div>
+                            <div class="col-md-7 ml-5">
+                                <a class="btn btn-outline-dark mt-0 btn-sm float-right mb-2" id="btnRemoveFromCart" onclick="RemoveFromCart(this)" data-id="@c.Id"><i class="far fa-trash-alt"></i> <p class="d-inline ">Ukloni iz korpe </p>  </a>
+                                <a class="text-decoration-none" href="/Products/Details/@c.Product.Id"><h4 class="h4">@c.Product.Title</h4></a>
+                                <span class="small"><b>Broj artikla:</b>@c.Product.ItemNumber</span>
+                                <hr class="mb-0" />
+                                <span class="font-weight-bold">
+                                    Cena: @c.Product.Price RSD
+                                    <a class="priceInfo"><i class="fas fa-info-circle"></i><span>Cena po komadu. </span></a>
+                                </span>
+                                <br />
+                                <div class="font-weight-bold mt-1">
+                                    Veličina:
+
+                                    <div class="d-inline">
+
+                                        <select value="0" class="browser-default custom-select custom-select-sm mb-3" onchange="UpdateCartItem(this);UpdateSubmitButton()" data-id="@c.Id" id="itemSize">
+                                            @{
+
+                                                if (@c.Size == "Odaberite veličinu")
+                                                {
+                                                    <option disabled selected>Odaberite veličinu</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@c.Size">@c.Size</option>
+                                                }
+
+                                                foreach (var size in @c.Product.Sizes)
+                                                {
+                                                    if (size.SizeLetter == c.Size)
+                                                        continue;
+
+                                                    <option value="@size.SizeLetter">@size.SizeLetter</option>
+                                                }
+
+                                            }
+                                        </select>
+                                        <span asp-validation-for="@c.Size" class="text-warning"></span>
+                                    </div>
+                                </div>
+                                <div class="font-weight-bold">
+                                    Količina:
+                                    <div class="d-inline" id="MinusPlusRange">
+                                        <div class="number">
+                                            <span class="minus">-</span>
+                                            <input type="text" asp-for="@c.Quantity" value="@c.Quantity" id="itemQuantity_@c.Id" class="itemQuantity" onchange="UpdateCartItem(this)" data-id="@c.Id" data-beforeChange="@c.Quantity" min="1" disabled />
+                                            <span class="plus">+</span>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                            <hr />
+                        </div>
+                        <hr class="bg-dark mb-0" />
+
+                    }
+                }
+
+            </div>
+            <div class="col col-md-4">
+                <h5 class="h5 mb-0 d-inline">Pregled kupovine</h5>
+                <h5 class="d-inline float-right pr-2"><i class="fab fa-paypal"></i> <i class="fas fa-money-bill-alt"></i></h5>
+                <hr class="bg-dark mt-0 w-100" />
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="font-weight-bold d-inline float-left">Artikli:</p>
+                        @if (Model == null)
+                        {
+                            <p class="font-weight-bold d-inline float-right"> 0 RSD </p>
+                        }
+                        else
+                        {
+                    <div class="totalPriceUpdate">
+                        <p class="font-weight-bold d-inline float-right"> @Model.Cart.TotalPrice RSD </p>
+                    </div>
+                            
+                        }
+                    </div>
+                    <div class="col-md-12">
+                        <p class="font-weight-bold d-inline float-left">Dostava:</p>
+                        @if (Model == null)
+                        {
+                            <p class="font-weight-bold d-inline float-right">0 RSD</p>
+                        }
+                        else
+                        {
+                            <p class="font-weight-bold d-inline float-right">250 RSD</p>
+                        }
+                    </div>
+                    <div class="col-md-12">
+                        <hr />
+                        <p class="font-weight-bold d-inline float-left">Ukupno:</p>
+                        @if (Model == null)
+                        {
+                            <p class="font-weight-bold d-inline float-right">0 RSD</p>
+                        }
+                        else
+                        {
+                            <div class="totalPriceUpdatePlusShipping">
+                                <p class="font-weight-bold d-inline float-right"> @(Model.Cart.TotalPrice+250) RSD </p>
+                            </div>
+                        }
+
+                    </div>
+                    
+                    <div class="col-md-12">
+                        <div id="submitCartButtonDiv">
+                            @if (Model == null)
+                            {
+
+                                <input type="submit" value="Nastavi na plaćanje" class="btn btn-dark btn-sm col-md-12" disabled />
+                            }
+                            else
+                            {
+                                var disable = false;
+                                @if (Model.Cart.CartItem.Count() <= 0)
+                                {
+                                    <input type="submit" value="Nastavi na plaćanje" class="btn btn-dark btn-sm col-md-12" disabled />
+                                }
+                                else
+                                {
+                                    @foreach (var c in Model.Cart.CartItem)
+                                    {
+
+                                        if (@c.Size == "Odaberite veličinu")
+                                        {
+                                            disable = true;
+                                        }
+
+
+
+                                    }
+
+                                    if (disable == true)
+                                    {
+                                        <input type="submit" value="Nastavi na plaćanje" class="btn btn-dark btn-sm col-md-12" disabled />
+                                    }
+                                    else
+                                    {
+                                        @*<input type="submit" value="Nastavi na plaćanje" class="btn btn-dark btn-sm col-md-12" />*@
+                                        <a href="/Checkout" class="btn btn-dark btn-sm col-md-12">Nastavi na plaćanje</a>
+                                    }
+
+
+                                }
+
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+
+        var elements = document.querySelectorAll('.itemQuantity');
+        var values = [].map.call(elements, function (e) {
+            return e.value;
+        });
+        
+
+            
+
+        function RemoveFromCart(item) {
+            var cartItemId = $(item).attr("data-id");
+            var selectQuantity = document.querySelector('#itemQuantity_'+cartItemId);
+            var quantity = selectQuantity.value;
+
+
+
+            var token = $('input[name="__RequestVerificationToken"]').val();
+            $.ajax({
+                type: 'DELETE',
+                url: '/Cart',
+                data: {
+                    __RequestVerificationToken: token,
+                    "cartItemId": cartItemId,
+                    "quantity": quantity
+                },
+                success: function (data) {
+
+                    location.reload();
+               },
+                error: function (request, status, error) {
+                    location.reload();
+                    
+                }
+
+            });
+
+
+        }
+
+        function UpdateCartItem(item) {
+            var cartItemId = $(item).attr("data-id");
+            var selectQuantity = document.querySelector('#itemQuantity_'+cartItemId);
+            var quantity = selectQuantity.value;
+
+            var selectSize = document.querySelector('#itemSize');
+            var size = selectSize.value;
+
+            var counter = document.querySelector("#cartItemCounter_" + cartItemId).value;
+
+            var token = $('input[name="__RequestVerificationToken"]').val();
+            $.ajax({
+                async: false,
+                type: 'PUT',
+                url: '/Cart',
+                data: {
+                    __RequestVerificationToken: token,
+                    "cartItemId": cartItemId, 
+                    "quantity": quantity,
+                    "size": size,
+                    "quantityBeforeChange": values[counter]
+                },
+                success: function (data) {
+
+                    console.log("Successfully updated. " + typeof (data.message));
+                    values[counter] = quantity;
+                    UpdateCartItemView();
+                },
+                error: function (request, status, error) {
+                    console.log("Successfully updated. ");
+                    values[counter] = quantity;
+                    UpdateCartItemView();
+                }
+
+            });
+
+
+        }
+
+        function UpdateCartItemView() {
+            
+            $.ajax({
+                async:false,
+                type: 'GET',
+                url: '/Cart/GetPrice',
+                success: function (data) {
+                    $('.totalPriceUpdate').html(data.message);
+                    $('.totalPriceUpdatePlusShipping').html(data.message2);
+                    
+                },
+                error: function (request, status, error) {
+                    $('.totalPriceUpdate').html(request);
+                    $('.totalPriceUpdatePlusShipping').html(data.message2);
+                }
+
+            });
+
+        }
+
+        function UpdateSubmitButton() {
+            $("#submitCartButtonDiv").load(window.location.href + " #submitCartButtonDiv");
+        }
+    </script>
+}

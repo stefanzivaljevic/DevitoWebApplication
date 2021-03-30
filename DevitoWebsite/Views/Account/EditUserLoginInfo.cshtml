@@ -1,0 +1,62 @@
+﻿@model DevitoWebsite.ViewModels.ChangePasswordViewModel
+@{
+    ViewData["Title"] = " - Promena lozinke";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+}
+
+<h1>Promena lozinke</h1>
+<p>Korisnički nalog vam omogućava da naručite bilo koji artikal sa našeg sajta. </p>
+<hr />
+<a class="btn btn-info btn-sm text-white" href="/Account/Details">Nazad na profil</a>
+<div class="row">
+    <div class="col-md-4 offset-md-4 mt-5">
+
+
+
+
+        @using (Html.BeginForm("EditUserLoginInfoAsync", "Account"))
+        {
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="form-group">
+                <label asp-for="Email">Email</label>
+                <input asp-for="Email" type="text" class="form-control" disabled value="@Model.Email" />
+                <span asp-validation-for="Email" class="text-warning"></span>
+
+            </div>
+
+            <div class="form-group">
+                <label asp-for="OldPassword">Trenutna lozinka</label>
+                <input asp-for="OldPassword" type="password" class="form-control" />
+                <span asp-validation-for="OldPassword" class="text-warning"></span>
+
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NewPassword">Nova lozinka</label>
+                <input asp-for="NewPassword" type="password" class="form-control" />
+                <span asp-validation-for="NewPassword" class="text-warning"></span>
+
+            </div>
+
+            <input asp-for="Email" type="hidden" class="form-control" value="@Model.Email" />
+            <input asp-for="FirstName" type="hidden" class="form-control" value="@Model.FirstName" />
+            <input asp-for="LastName" type="hidden" class="form-control" value="@Model.LastName" />
+            <input asp-for="Address" type="hidden" class="form-control" value="@Model.Address" />
+            <input asp-for="PostalNumber" type="hidden" class="form-control" value="@Model.PostalNumber" />
+            <input asp-for="City" type="hidden" class="form-control" value="@Model.City" />
+            <input asp-for="CountryId" type="hidden" class="form-control" value="@Model.CountryId" />
+            <input asp-for="PhoneNumber" type="hidden" class="form-control" value="@Model.PhoneNumber" />
+
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <input type="submit" value="Promeni lozinku" class="btn btn-success" />
+            </div>
+        }
+    </div>
+</div>

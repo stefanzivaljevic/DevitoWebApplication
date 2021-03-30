@@ -1,0 +1,44 @@
+﻿@model ErrorViewModel
+@{
+    ViewData["Title"] = " - Greška";
+}
+
+<h1 class="text-danger text-center">Greška.</h1>
+<h3 class="text-danger text-center">Nastala je greška prilikom izvršavanja vašeg zahteva.</h3>
+
+<br/>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2 m-auto bg-light">
+            <div class="contact-form">
+                <h1>Kontakt</h1>
+                <p class="hint-text">Ako imate problema sa pristupom stranicama, javite nam se preko obrasca za kontakt i odgovorićemo u najkraćem roku.</p>
+                <form asp-action="SendErrorMail" asp-controller="Contact" method="post">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="inputFirstName">Ime</label>
+                                <input type="text" class="form-control" id="inputFirstName" asp-for="Name" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="inputLastName">Prezime</label>
+                                <input type="text" class="form-control" id="inputLastName" asp-for="LastName" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail">Email adresa</label>
+                        <input type="email" class="form-control" id="inputEmail" asp-for="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputMessage">Poruka</label>
+                        <textarea class="form-control" id="inputMessage" rows="5" asp-for="Message" required></textarea>
+                    </div>
+                    <input type="submit" class="btn btn-dark mb-2 ml-0" value="Pošalji poruku">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

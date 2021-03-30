@@ -1,0 +1,187 @@
+﻿@model List<Product>
+@{
+    ViewData["Title"] = "";
+}
+
+<div class="text-center">
+
+    <a class="navbar-brand" id="WelcomeLogo" asp-area="" asp-controller="Home" asp-action="Index">
+        <img src="~/lib/images/logo-large.png" class="img-fluid" />
+    </a>
+    <h2 class="display-4">Devito</h2>
+</div>
+<div class="container d-flex justify-content-center mt-100">
+    <div class="row">
+        @{
+            foreach (var m in Model)
+            {
+                <div class="col-12 col-md-6 col-lg-6">
+                    <div class="product-wrapper mb-45 text-center">
+                        <div class="product-img">
+                            <a href="/Products/Details/@m.Id" data-abc="true">
+                                <img src="@m.Image" alt="@m.Title" />
+                            </a>
+                            <div class="product-action">
+                                @{
+                                    if (User.Identity.IsAuthenticated)
+                                    {
+
+                                        <div class="product-action-style"> <a onclick="AddToWishList(this)" data-id="@m.Id"> <i class="fa fa-heart"></i> </a> <a onclick="AddToCart(this)" data-id="@m.Id"> <i class="fa fa-shopping-cart"></i> </a> </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="product-action-style"> <a href="/Account/Login"> <i class="fa fa-heart"></i> </a> <a href="/Account/Login"> <i class="fa fa-shopping-cart"></i> </a> </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <a href="/Products/Details/@m.Id" class="thumb-title text-center">
+                            @m.Title
+                        </a> 
+                        <div class="thumb-meta">
+                            <div class="prices justify-content-center">
+                                <div class="price">
+                                        @m.Price&nbsp;RSD
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        function AddToCart(item) {
+            var itemId = $(item).attr("data-id");
+            var formData = new FormData();
+            formData.append("productId", itemId);
+            var quantity = 1;
+            var size = "Odaberite veličinu";
+            formData.append("quantity", quantity);
+            formData.append("size", size);
+
+            $.ajax({
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                data: formData,
+                url: '/Cart',
+                success: function (data) {
+                    AddToCartSuccess();
+
+                },
+                error: function (request, status, error) {
+                    AddToCartSameItemError();
+                }
+
+            });
+
+
+        }
+
+        function AddToCartSuccess() {
+            $.ajax({
+                type: 'POST',
+                url: '/Messages/Cart/Success',
+                success: function () {
+                    window.scrollTo(0, 0);
+                    location.reload();
+
+
+                },
+                error: function (request, status, error) {
+                    window.scrollTo(0, 0);
+                    location.reload();
+                }
+
+            });
+        }
+
+
+        function AddToCartSameItemError() {
+            $.ajax({
+                type: 'POST',
+                url: '/Messages/Cart/SameItemError',
+                success: function () {
+                    window.scrollTo(0, 0);
+                    location.reload();
+
+
+                },
+                error: function (request, status, error) {
+                    window.scrollTo(0, 0);
+                    location.reload();
+                }
+
+            });
+        }
+
+        //AddToWishList
+
+        function AddToWishList(item) {
+            var itemId = $(item).attr("data-id");
+            var formData = new FormData();
+            formData.append("Id", itemId);
+
+            $.ajax({
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                data: formData,
+                url: '/WishList',
+                success: function (data) {
+                    AddToWishListSuccess();
+
+                },
+                error: function (request, status, error) {
+                    AddToWishListSameItemError();
+                }
+
+            });
+
+
+        }
+
+        function AddToWishListSuccess() {
+            $.ajax({
+                type: 'POST',
+                url: '/Messages/WishList/Success',
+                success: function () {
+                    window.scrollTo(0, 0);
+                    location.reload();
+
+
+                },
+                error: function (request, status, error) {
+                    window.scrollTo(0, 0);
+                    location.reload();
+                }
+
+            });
+        }
+
+
+        function AddToWishListSameItemError() {
+            $.ajax({
+                type: 'POST',
+                url: '/Messages/WishList/SameItemError',
+                success: function () {
+                    window.scrollTo(0, 0);
+                    location.reload();
+
+
+                },
+                error: function (request, status, error) {
+                    window.scrollTo(0, 0);
+                    location.reload();
+                }
+
+            });
+        }
+    </script>
+}
